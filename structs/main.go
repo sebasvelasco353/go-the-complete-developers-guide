@@ -1,5 +1,8 @@
 package main
 
+// NOTE: &variable gives me the address of the value the variable points at
+// NOTE: *pointer gives me the value this pointer is referencing
+
 import "fmt"
 
 type contactInfo  struct {
