@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
+
+type logWriter struct{}
 
 func main() {
   resp, err := http.Get("https://www.google.com")
@@ -13,10 +16,12 @@ func main() {
     os.Exit(1)
   }
 
-  // NOTE: We have to create a slice of bytes to pass to the READ method of the interface
-  // NOTE: The Slice has a lot of spaces (99999) because READ can not resize the slice
-  bs := make([]byte, 99999)
-  resp.Body.Read(bs)
+  // NOTE: io.copy(somethingWrite, somethingRead)
+  lw := logWriter{}
+  io.Copy(lw, resp.Body)
+}
 
+func (logWriter) Write(bs []byte) (int, error) {
   fmt.Println(string(bs))
+  return len(bs), nil 
 }
