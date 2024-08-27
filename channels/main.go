@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func main() {
@@ -18,11 +19,12 @@ func main() {
     go checkLink(link, c)
   }
 
-  // for { // NOTE: This is an infinite loop
-  for link := range c {
-    // NOTE: this is other type of infinite loop, basically it waits for a value on c and sets it in variable link,
-    // then continues waiting
-    go checkLink(link, c)
+  // NOTE: This is an infinite loop
+  for l := range c { // NOTE: waits for value on c and sets it as variable l and continues waiting
+    go func(link string) {
+      time.Sleep(time.Second * 5)
+      checkLink(link, c)
+    }(l) // NOTE: This is a function literal, the Go equivalent to an anonymous function in js
   }
 }
 
